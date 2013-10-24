@@ -16,7 +16,7 @@ var mongoUri = process.env.MONGOLAB_URI ||
   'localhost:27017/thoughtjournal';
 
 var monk = require('monk');
-var db = monk('localhost:27017/thoughtjournal');
+var db = monk(mongoUri);
 
 mongo.Db.connect(mongoUri, function (err, db) {
   db.collection('mydocs', function(er, collection) {
