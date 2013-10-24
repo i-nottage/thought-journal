@@ -1,0 +1,101 @@
+extends layout
+
+block head
+
+    script
+        $('ul').on('click', '.thoughtBtn', function() {
+            
+            var userNm = $("#userdiv").text();
+            
+            // Look at all my initializations!!!!!!!
+            var index = $( ".thoughtBtn" ).index( this );
+            var thought = $("span.thought").eq(index).text();
+            var time = $("span.time").eq(index).text();
+            
+            $.post("/deleteThought",
+            {
+             thought:thought,
+             time:time,
+             user:userNm
+            },
+            // if correct
+            function(response, status) {
+                $("li").eq(index).remove();
+            });
+        });
+        
+    script
+        $(document).ready(function(){
+            var userNm = $("#userdiv").text();
+            
+            // SUBMITTING A NEW THOUGHT
+            $("#btnSubmit").click(function(){
+            
+                // get time
+                var rawtime = new Date();
+                var min = rawtime.getMinutes();
+                var hour = rawtime.getHours();
+                var sec = rawtime.getSeconds();
+                var day = rawtime.getDate();
+                var month = rawtime.getMonth();
+                var year = rawtime.getFullYear();
+                
+                // Timestamp Format
+                // hour:minute:sec day/month/year
+                var timestring = hour + ':' + min + ':' + sec + ' ' + day + '/' + month + '/' + year;
+                
+                $.post("/postThought",
+                    {
+                     thought: $("#thoughtTxtArea").val(),
+                     user:userNm,
+                     time:timestring
+                     },
+                    // appends new button to thing
+                    function(responseTxt, statusTxt) {
+                        $("ul").append("<li><button class='thoughtBtn'>Delete</button><span class='thought'>" + responseTxt.thought + "</span></br><span class='time'>"+ responseTxt.timestamp + "</span</li>");
+                        $("#thoughtTxtArea").val('');
+                    });
+            });
+            
+            
+            //// ERASING A THOUGHT
+            $(".thoughtBtn").click(function(){
+                // Look at all my initializations!!!!!!!
+                var index = $( ".thoughtBtn" ).index( this );
+                var thought = $("span.thought").eq(index).text();
+                var time = $("span.time").eq(index).text();
+                
+                $.post("/deleteThought",
+                {
+                 thought:thought,
+                 time:time,
+                 user:userNm
+                },
+                // if correct
+                function(response, status) {
+                    $("li").eq(index).remove();
+                });
+            });
+        });
+block content
+    a(href='/') Back to Login
+    
+    h1= username + "'s " + title
+    
+    if thoughtlist
+       ul
+          each thought, i in thoughtlist
+             li
+                button.thoughtBtn Delete
+                span.thought= thought.thought
+                br
+                span.time= thought.timestamp
+    else
+       p= 'user has no thoughts'
+       
+    p= 'Type a new thought'
+    
+    textarea#thoughtTxtArea
+    button#btnSubmit(type="submit") submit
+        
+    div#userdiv(hidden="true")= username

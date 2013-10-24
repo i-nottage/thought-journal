@@ -1,0 +1,50 @@
+extends layout
+
+block head
+
+    script(type='text/javascript')
+        $(document).ready(function() {
+        
+            // Submit for POST
+            $("#btnSubmit").click(function() {
+                var user = $("#inputUserName").val();
+                var pass = $("#inputUserPass").val();
+                
+                console.log("something");
+                // Post login info to route.login
+                
+                // check to see if username already exists, that's the main
+                // obstacle to registration
+                $.post("/newuser",
+                    {
+                      username:user,
+                      password:pass
+                    },
+                    function(response, status, jqXHR) {
+                        $("body").html(response);
+                        var urlPath = "/journal";
+                        processAjaxData(response, urlPath); 
+                    })
+                    .fail(function(response, status) {
+                        $("#errorlog").text(response.responseText);
+                    });
+                });
+        });
+        
+    script(type='text/javascript')
+        function processAjaxData(response, urlPath){
+            document.title = response.pageTitle;
+            window.history.pushState({"html":response.html,"pagetitle":response.pageTitle},"", urlPath);
+        }
+block content
+
+    a(href='/') Back to Login
+    
+    h1= title
+    
+    input#inputUserName(type="text", placeholder="Username", name="username")
+    input#inputUserPass(type="text", placeholder="Password", name="userpass")
+    button#btnSubmit(type="submit") submit
+    
+    p(style='white-space:pre;')
+    div#errorlog

@@ -1,0 +1,49 @@
+extends layout
+
+block head
+    
+    script(type='text/javascript')
+        $(document).ready(function() {
+        
+            // Submit for POST
+            $("#btnSubmit").click(function() {
+                var user = $("#inputUserName").val();
+                var pass = $("#inputUserPass").val();
+                
+                console.log("something");
+                // Post login info to route.login
+                $.post("/login",
+                    {
+                      username:user,
+                      password:pass
+                    },
+                    function(response, status, jqXHR) {
+                        if (status == "success")
+                            $("body").html(response);
+                            var urlPath = "/journal";
+                            processAjaxData(response, urlPath);
+                    })
+                    .fail(function(xhr, status) {
+                       $("#errorlog").text(xhr.responseText);
+                    });
+                });
+        });
+        
+    script(type='text/javascript')
+        function processAjaxData(response, urlPath){
+            document.title = response.pageTitle;
+            window.history.pushState({"html":response.html,"pagetitle":response.pageTitle},"", urlPath);
+        }
+block content
+
+    h1= title
+    
+    input#inputUserName(type="text", placeholder="Username", name="username")
+    input#inputUserPass(type="text", placeholder="Password", name="userpass")
+    button#btnSubmit(type="submit") submit
+    
+    br
+    div#errorlog
+    
+    p(style='white-space:pre;')
+    a(href='adduser') New User

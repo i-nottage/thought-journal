@@ -1,0 +1,13 @@
+
+    form#newUserForm(name="loginform", method="post", action="/login")
+    
+        input#inputUserName(type="text", placeholder="Username", name="username")
+        input#inputUserPass(type="text", placeholder="Password", name="userpass")
+        button#btnSubmit(type="submit") submit
+        
+        
+    form#newUserForm(name="newuserform", method="post", action="/newuser")
+    
+        input#inputUserName(type="text", placeholder="Username", name="username")
+        input#inputUserPass(type="text", placeholder="Password", name="userpass")
+        button#btnSubmit(type="submit") submit
