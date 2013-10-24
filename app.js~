@@ -34,10 +34,12 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/journal', routes.journal);
-app.get('/adduser', routes.adduser(db));
+app.get('/adduser', routes.adduser);
 
 app.post('/login', routes.login(db));
 app.post('/newuser', routes.newuser(db));
+app.post('/postThought', routes.postThought(db));
+app.post('/deleteThought', routes.deleteThought(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

@@ -10,8 +10,20 @@ var http = require('http');
 var path = require('path');
 
 var mongo = require('mongodb');
+
+var mongoUri = process.env.MONGOLAB_URI ||
+  process.env.MONGOHQ_URL ||
+  'localhost:27017/thoughtjournal';
+
 var monk = require('monk');
 var db = monk('localhost:27017/thoughtjournal');
+
+mongo.Db.connect(mongoUri, function (err, db) {
+  db.collection('mydocs', function(er, collection) {
+    collection.insert({'mykey': 'myvalue'}, {safe: true}, function(er,rs) {
+    });
+  });
+});
 
 var app = express();
 
